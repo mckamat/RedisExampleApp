@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RedisExampleApp.API.Models;
 using RedisExampleApp.API.Repository;
+using RedisExampleApp.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,10 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.EnsureCreated();
 
 }
+builder.Services.AddSingleton<RedisService>(sp =>
+{
+    return new RedisService(builder.Configuration["CacheOptions:Url"]);
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
